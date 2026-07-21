@@ -216,7 +216,7 @@ details[open]>summary{display:none}
           <div class="video-wrap">
             <div class="video-card">
               <div class="video-frame">
-                <iframe src="https://www.youtube.com/embed/2KVNN98pyac?start=48&rel=0&modestbranding=1" frameborder="0" allow="accelerometer;autoplay;clipboard-write;encrypted-media;gyroscope;picture-in-picture" allowfullscreen></iframe>
+                <iframe src="https://www.youtube.com/embed/2KVNN98pyac?rel=0&modestbranding=1" frameborder="0" allow="accelerometer;autoplay;clipboard-write;encrypted-media;gyroscope;picture-in-picture" allowfullscreen></iframe>
               </div>
               <div class="video-info">
                 <div class="video-tag">Marble Tour in Vila Vi&#231;osa</div>
@@ -279,59 +279,42 @@ details[open]>summary{display:none}
 </div>
 
 <script>
-// Photo → star → dissolve animation
+// Gentle one-time sparkle burst around the photos. Photos stay fully visible.
 function animatePhotos() {
   const photos = document.querySelectorAll('.photos-animated .photo-circle');
-  const amp = document.querySelector('.photos-animated .photo-amp');
   if (!photos.length) return;
 
-  // Create star SVGs to replace photos
-  photos.forEach((photo, i) => {
-    setTimeout(() => {
-      photo.style.transition = 'all 2s ease-in-out';
-      photo.style.transform = 'rotate(720deg) scale(0.3) translateY(-80px)';
-      photo.style.opacity = '0';
-      photo.style.borderRadius = '0';
-      photo.style.clipPath = 'polygon(50% 0%,61% 35%,98% 35%,68% 57%,79% 91%,50% 70%,21% 91%,32% 57%,2% 35%,39% 35%)';
-
-      // Create floating star particles
-      for (let s = 0; s < 5; s++) {
-        const star = document.createElement('div');
-        star.innerHTML = '✦';
-        star.style.cssText = `
-          position:absolute;
-          color:#D4A853;font-size:${10+Math.random()*14}px;
-          left:${photo.offsetLeft + 30 + (Math.random()-0.5)*40}px;
-          top:${photo.offsetTop + 30}px;
-          pointer-events:none;opacity:1;z-index:10;
-          transition:all ${1.5+Math.random()}s ease-out;
-        `;
-        photo.parentElement.appendChild(star);
-        requestAnimationFrame(() => {
-          star.style.transform = `translateY(-${80+Math.random()*120}px) translateX(${(Math.random()-0.5)*80}px) rotate(${Math.random()*360}deg)`;
-          star.style.opacity = '0';
-        });
-        setTimeout(() => star.remove(), 3000);
-      }
-    }, i * 300);
+  photos.forEach((photo) => {
+    for (let s = 0; s < 6; s++) {
+      const star = document.createElement('div');
+      star.innerHTML = '✦';
+      star.style.cssText = `
+        position:absolute;
+        color:#D4A853;font-size:${9+Math.random()*12}px;
+        left:${photo.offsetLeft + photo.offsetWidth/2 + (Math.random()-0.5)*photo.offsetWidth}px;
+        top:${photo.offsetTop + photo.offsetHeight/2}px;
+        pointer-events:none;opacity:0;z-index:10;
+        transition:all ${1.4+Math.random()}s ease-out;
+      `;
+      photo.parentElement.appendChild(star);
+      requestAnimationFrame(() => {
+        star.style.opacity = '1';
+        star.style.transform = `translateY(-${60+Math.random()*90}px) translateX(${(Math.random()-0.5)*70}px) rotate(${Math.random()*360}deg)`;
+      });
+      setTimeout(() => { star.style.opacity = '0'; }, 1200);
+      setTimeout(() => star.remove(), 2800);
+    }
   });
-
-  if (amp) {
-    setTimeout(() => {
-      amp.style.transition = 'all 1.5s ease-out';
-      amp.style.opacity = '0';
-      amp.style.transform = 'translateY(-40px)';
-    }, 200);
-  }
 }
 
-// Listen for details toggle to trigger animation
+// Listen for details toggle to trigger the sparkle once (photos remain visible)
 document.querySelectorAll('details').forEach(d => {
   d.addEventListener('toggle', function() {
     if (this.open) {
       const wishes = this.querySelector('.wishes');
-      if (wishes) {
-        setTimeout(animatePhotos, 6000);
+      if (wishes && !wishes.dataset.sparkled) {
+        wishes.dataset.sparkled = '1';
+        setTimeout(animatePhotos, 900);
       }
     }
   });
