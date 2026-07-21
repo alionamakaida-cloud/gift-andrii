@@ -120,15 +120,14 @@ details[open]>summary{display:none}
 .video-card{
   width:100%;border-radius:20px;overflow:hidden;
   background:var(--card);border:1px solid var(--card-border);
-  box-shadow:0 8px 24px rgba(0,0,0,0.06);text-decoration:none;display:block;
-}
+  box-shadow:0 8px 24px rgba(0,0,0,0.06);}
 .video-frame{
-  width:100%;padding:36px 20px;
-  background:linear-gradient(135deg,#1a1a1a,#282828);
-  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;
+  width:100%;aspect-ratio:16/9;position:relative;
+  background:#000;
 }
-.yt-icon{width:64px;height:44px;filter:drop-shadow(0 2px 8px rgba(0,0,0,0.3))}
-.yt-text{font-size:13px;color:rgba(255,255,255,0.7);font-weight:400}
+.video-frame iframe{
+  position:absolute;inset:0;width:100%;height:100%;border:none;
+}
 .video-info{padding:14px 18px}
 .video-tag{font-size:10px;letter-spacing:3px;text-transform:uppercase;color:var(--amber-dark);font-weight:500;margin-bottom:3px}
 .video-sub{font-size:12px;color:var(--text-light);font-weight:400}
@@ -173,16 +172,9 @@ details[open]>summary{display:none}
 }
 .cert-note-title{font-size:11px;font-weight:500;color:var(--amber-dark);letter-spacing:1px;text-transform:uppercase;margin-bottom:6px}
 .cert-note-text{font-size:12px;line-height:1.7;color:var(--text-mid);font-weight:400}
-.actions-row{display:flex;gap:10px;width:100%;margin-top:14px}
-.act-btn{
-  flex:1;padding:12px 14px;
-  background:rgba(255,255,255,0.8);border:1px solid var(--card-border);border-radius:14px;
-  color:var(--amber-dark);font-family:'DM Sans',sans-serif;font-size:12px;font-weight:500;
-  letter-spacing:0.5px;text-decoration:none;
-  display:flex;align-items:center;justify-content:center;gap:7px;
-  -webkit-tap-highlight-color:transparent;touch-action:manipulation;
-}
-.act-btn svg{width:14px;height:14px;stroke:var(--amber-dark);fill:none;stroke-width:1.5}
+
+
+
 
 @media(max-width:380px){
   .splash-text{font-size:26px}
@@ -222,16 +214,15 @@ details[open]>summary{display:none}
 
           <!-- 3. VIDEO -->
           <div class="video-wrap">
-            <a class="video-card" href="https://youtu.be/2KVNN98pyac?si=bYWl8b9lQQqRh-Z-" target="_blank" rel="noopener">
+            <div class="video-card">
               <div class="video-frame">
-                <svg class="yt-icon" viewBox="0 0 68 48"><path d="M66.52 7.74c-.78-2.93-2.49-5.41-5.42-6.19C55.79.13 34 0 34 0S12.21.13 6.9 1.55C3.97 2.33 2.27 4.81 1.48 7.74.06 13.05 0 24 0 24s.06 10.95 1.48 16.26c.78 2.93 2.49 5.41 5.42 6.19C12.21 47.87 34 48 34 48s21.79-.13 27.1-1.55c2.93-.78 4.64-3.26 5.42-6.19C67.94 34.95 68 24 68 24s-.06-10.95-1.48-16.26z" fill="#FF0000"/><path d="M45 24L27 14v20" fill="white"/></svg>
-                <div class="yt-text">&#9654; Натисни, щоб подивитись</div>
+                <iframe src="https://www.youtube.com/embed/2KVNN98pyac?start=48&rel=0&modestbranding=1" frameborder="0" allow="accelerometer;autoplay;clipboard-write;encrypted-media;gyroscope;picture-in-picture" allowfullscreen></iframe>
               </div>
               <div class="video-info">
                 <div class="video-tag">Marble Tour in Vila Vi&#231;osa</div>
                 <div class="video-sub">Rota do M&#225;rmore &middot; Vila Vi&#231;osa, Alentejo</div>
               </div>
-            </a>
+            </div>
 
             <details>
               <summary class="btn-outline" style="margin-top:24px">Далі &rarr;</summary>
@@ -269,20 +260,14 @@ details[open]>summary{display:none}
                         Сертифікат дійсний до <strong style="color:var(--amber-dark)">31 грудня 2026</strong>.
                       </div>
                     </div>
-                    <div class="actions-row">
-                      <a class="act-btn" href="https://wa.me/351965087618?text=Hello!%20I%20have%20a%20gift%20voucher%20for%20the%20Marble%20Tour%20(Andrii%20Suslenko%20%2B%201).%20I%20would%20like%20to%20book%20a%20tour." target="_blank" rel="noopener">
-                        <svg viewBox="0 0 24 24" style="fill:var(--amber-dark);stroke:none;width:14px;height:14px"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
-                        Book
-                      </a>
-                      <a class="act-btn" href="https://www.google.com/maps/search/?api=1&query=38.78123,-7.417639" target="_blank" rel="noopener">
-                        <svg viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+
+                    <div style="display:flex;justify-content:center;margin-top:14px">
+                      <a style="padding:12px 24px;background:rgba(255,255,255,0.8);border:1px solid rgba(212,168,83,0.2);border-radius:14px;color:#9A7B3C;font-family:'DM Sans',sans-serif;font-size:12px;font-weight:500;text-decoration:none;display:flex;align-items:center;gap:7px" href="https://www.google.com/maps/search/?api=1&query=38.78123,-7.417639" target="_blank" rel="noopener">
+                        <svg viewBox="0 0 24 24" style="width:14px;height:14px;stroke:#9A7B3C;fill:none;stroke-width:1.5"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
                         Map
                       </a>
-                      <a class="act-btn" href="http://rotadomarmoreae.com/en/marble-tour-in-vila-vicosa/" target="_blank" rel="noopener">
-                        <svg viewBox="0 0 24 24"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71" stroke-linecap="round" stroke-linejoin="round"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71" stroke-linecap="round" stroke-linejoin="round"/></svg>
-                        Website
-                      </a>
                     </div>
+
                   </div>
                 </details>
               </div>
