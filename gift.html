@@ -205,8 +205,8 @@ details[open]>summary{display:none}
         <div class="screen-title">Андрію!<br><em>Цей масштабний за відчуттями сюрприз</em> - саме для тебе!</div>
         <div class="divider"></div>
         <div class="screen-sub">
-          Мармурові кар'єри Віла Вісоза чекають на іменинника: величезні стіни білого каменю, фабрика, де мармур набуває форми, та історія, яка тягнеться крізь століття.<br><br>
-          Дві з половиною години у світі мармуру, який став мистецтвом.
+          На тебе чекають величезні стіни, фабрика, форми, історія та мистецтво. Слідами «How It's Made».<br><br>
+          <em>Просто приймай!</em>
         </div>
 
         <details>
@@ -279,46 +279,78 @@ details[open]>summary{display:none}
 </div>
 
 <script>
-// Gentle one-time sparkle burst around the photos. Photos stay fully visible.
+// Photos spin, turn into stars and dissolve upward. Triggered once, only after
+// the photos have actually been on screen for a few seconds (so the effect is seen).
 function animatePhotos() {
   const photos = document.querySelectorAll('.photos-animated .photo-circle');
+  const amp = document.querySelector('.photos-animated .photo-amp');
   if (!photos.length) return;
 
-  photos.forEach((photo) => {
-    for (let s = 0; s < 6; s++) {
-      const star = document.createElement('div');
-      star.innerHTML = '✦';
-      star.style.cssText = `
-        position:absolute;
-        color:#D4A853;font-size:${9+Math.random()*12}px;
-        left:${photo.offsetLeft + photo.offsetWidth/2 + (Math.random()-0.5)*photo.offsetWidth}px;
-        top:${photo.offsetTop + photo.offsetHeight/2}px;
-        pointer-events:none;opacity:0;z-index:10;
-        transition:all ${1.4+Math.random()}s ease-out;
-      `;
-      photo.parentElement.appendChild(star);
-      requestAnimationFrame(() => {
-        star.style.opacity = '1';
-        star.style.transform = `translateY(-${60+Math.random()*90}px) translateX(${(Math.random()-0.5)*70}px) rotate(${Math.random()*360}deg)`;
-      });
-      setTimeout(() => { star.style.opacity = '0'; }, 1200);
-      setTimeout(() => star.remove(), 2800);
-    }
+  photos.forEach((photo, i) => {
+    setTimeout(() => {
+      photo.style.transition = 'all 2s ease-in-out';
+      photo.style.transform = 'rotate(720deg) scale(0.3) translateY(-90px)';
+      photo.style.opacity = '0';
+      photo.style.borderRadius = '0';
+      photo.style.clipPath = 'polygon(50% 0%,61% 35%,98% 35%,68% 57%,79% 91%,50% 70%,21% 91%,32% 57%,2% 35%,39% 35%)';
+
+      // floating star particles rising upward
+      for (let s = 0; s < 6; s++) {
+        const star = document.createElement('div');
+        star.innerHTML = '✦';
+        star.style.cssText = `
+          position:absolute;
+          color:#D4A853;font-size:${10+Math.random()*14}px;
+          left:${photo.offsetLeft + photo.offsetWidth/2 + (Math.random()-0.5)*photo.offsetWidth}px;
+          top:${photo.offsetTop + photo.offsetHeight/2}px;
+          pointer-events:none;opacity:1;z-index:10;
+          transition:all ${1.6+Math.random()}s ease-out;
+        `;
+        photo.parentElement.appendChild(star);
+        requestAnimationFrame(() => {
+          star.style.transform = `translateY(-${100+Math.random()*140}px) translateX(${(Math.random()-0.5)*80}px) rotate(${Math.random()*360}deg)`;
+          star.style.opacity = '0';
+        });
+        setTimeout(() => star.remove(), 3200);
+      }
+    }, i * 350);
   });
+
+  if (amp) {
+    setTimeout(() => {
+      amp.style.transition = 'all 1.5s ease-out';
+      amp.style.opacity = '0';
+      amp.style.transform = 'translateY(-40px)';
+    }, 300);
+  }
 }
 
-// Listen for details toggle to trigger the sparkle once (photos remain visible)
-document.querySelectorAll('details').forEach(d => {
-  d.addEventListener('toggle', function() {
-    if (this.open) {
-      const wishes = this.querySelector('.wishes');
-      if (wishes && !wishes.dataset.sparkled) {
-        wishes.dataset.sparkled = '1';
-        setTimeout(animatePhotos, 900);
-      }
-    }
-  });
-});
+// Fire the effect once, ~4s after the photos are genuinely visible on screen.
+(function () {
+  const target = document.querySelector('.photos-animated');
+  if (!target) return;
+  let done = false;
+  const trigger = () => {
+    if (done) return;
+    done = true;
+    setTimeout(animatePhotos, 4000);
+  };
+  if ('IntersectionObserver' in window) {
+    const io = new IntersectionObserver((entries) => {
+      entries.forEach((e) => {
+        if (e.isIntersecting && e.intersectionRatio > 0.5) trigger();
+      });
+    }, { threshold: 0.6 });
+    io.observe(target);
+  } else {
+    // fallback: trigger when the wishes section is opened
+    document.querySelectorAll('details').forEach((d) => {
+      d.addEventListener('toggle', function () {
+        if (this.open && this.querySelector('.photos-animated')) trigger();
+      });
+    });
+  }
+})();
 </script>
 
 </body>
